@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  notebooks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: |
+            requirements.txt
+            requirements-dev.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+
+      - name: Validate notebooks
+        run: |
+          python - <<'PY'
+          import glob
+          import warnings
+
+          import nbformat
+
+          paths = [p for p in glob.glob("**/*.ipynb", recursive=True) if ".ipynb_checkpoints" not in p]
+          assert paths, "no notebooks found"
+          for path in paths:
+              with warnings.catch_warnings():
+                  warnings.simplefilter("error")
+                  nb = nbformat.read(path, as_version=nbformat.NO_CONVERT)
+                  nbformat.validate(nb)
+              print(f"valid: {path}")
+          PY
+
+      - name: Check dataset
+        run: |
+          python - <<'PY'
+          import pandas as pd
+
+          df = pd.read_csv("diabetes.csv")
+          assert df.shape == (768, 9), df.shape
+          assert "Outcome" in df.columns
+          print("diabetes.csv:", df.shape)
+          PY
+
+      - name: Check notebook imports
+        env:
+          MPLBACKEND: Agg
+          TF_CPP_MIN_LOG_LEVEL: "2"
+        run: |
+          python -c "import keras.layers, keras.models, matplotlib.pyplot, numpy, pandas, seaborn, sklearn.ensemble, sklearn.metrics, sklearn.model_selection, sklearn.naive_bayes, sklearn.neighbors, sklearn.preprocessing, sklearn.svm"
