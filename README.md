@@ -2,6 +2,8 @@
 
 ![CI](https://github.com/aayxshkumar/diabetes-prediction/actions/workflows/ci.yml/badge.svg)
 
+> Learning project from July 2023. The notebook builds on someone else's work, so it isn't entirely my own.
+
 A Jupyter notebook (`Diabetes.ipynb`) that compares several classifiers for predicting diabetes on the Pima Indians Diabetes data.
 
 ## Data
