@@ -1,0 +1,11 @@
+# Libraries imported by Diabetes.ipynb, pinned to current releases.
+# The notebook was written for Python 3.6 and older versions of these
+# libraries; see "Running it today" in README.md.
+keras==3.15.1
+matplotlib==3.11.2
+numpy==2.5.4
+pandas==3.1.0
+scikit-learn==1.9.1
+seaborn==0.13.2
+tensorflow==2.21.0
+xgboost==3.4.1
